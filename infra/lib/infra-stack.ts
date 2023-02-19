@@ -1,5 +1,5 @@
 import { CfnOutput, Stack, StackProps } from 'aws-cdk-lib';
-import { Code, Function, Runtime, FunctionUrlAuthType } from 'aws-cdk-lib/aws-lambda';
+import { Architecture, Code, Function, FunctionUrlAuthType, Runtime } from 'aws-cdk-lib/aws-lambda';
 import { Construct } from 'constructs';
 
 export class InfraStack extends Stack {
@@ -9,6 +9,7 @@ export class InfraStack extends Stack {
         const functionHandler = new Function(this, "Lambda-1", {
             code: Code.fromAsset("../target/lambda/lambda-1"),
             runtime: Runtime.PROVIDED_AL2,
+            architecture: Architecture.ARM_64,
             handler: "lambda-1-handler",
             memorySize: 1024,
         });
