@@ -1,14 +1,5 @@
 use lambda_http::{run, service_fn, Body, Error, Request, /*RequestExt,*/ Response};
 
-async fn function_handler(_event: Request) -> Result<Response<Body>, Error> {
-    let resp = Response::builder()
-        .status(200)
-        .header("content-type", "text/html")
-        .body("Hello AWS Lambda HTTP request".into())
-        .map_err(Box::new)?;
-    Ok(resp)
-}
-
 #[tokio::main]
 async fn main() -> Result<(), Error> {
     tracing_subscriber::fmt()
@@ -18,4 +9,17 @@ async fn main() -> Result<(), Error> {
         .init();
 
     run(service_fn(function_handler)).await
+}
+
+async fn function_handler(_event: Request) -> Result<Response<Body>, Error> {
+    let a = 1;
+    let b = 2;
+    let c = common::add(1, 2);
+
+    let resp = Response::builder()
+        .status(200)
+        .header("content-type", "text/html")
+        .body(format!("{a} + {b} = {c}").into())
+        .map_err(Box::new)?;
+    Ok(resp)
 }
