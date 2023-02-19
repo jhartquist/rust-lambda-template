@@ -1,11 +1,9 @@
-import * as cdk from 'aws-cdk-lib';
-import { CfnOutput } from 'aws-cdk-lib';
+import { CfnOutput, Stack, StackProps } from 'aws-cdk-lib';
 import { Code, Function, Runtime, FunctionUrlAuthType } from 'aws-cdk-lib/aws-lambda';
 import { Construct } from 'constructs';
-// import * as sqs from 'aws-cdk-lib/aws-sqs';
 
-export class InfraStack extends cdk.Stack {
-    constructor(scope: Construct, id: string, props?: cdk.StackProps) {
+export class InfraStack extends Stack {
+    constructor(scope: Construct, id: string, props?: StackProps) {
         super(scope, id, props);
 
         const functionHandler = new Function(this, "Lambda-1", {
@@ -19,7 +17,6 @@ export class InfraStack extends cdk.Stack {
             authType: FunctionUrlAuthType.NONE,
         });
 
-
         new CfnOutput(this, 'Function Name', {
             value: functionHandler.functionName,
             description: "The name of the lambda-1 function"
@@ -27,7 +24,7 @@ export class InfraStack extends cdk.Stack {
 
         new CfnOutput(this, 'Function URL', {
             value: functionUrl.url,
-            description: "The public endpoint for the lambda-1 function"
+            description: "The public URL of the lambda-1 function"
         });
     }
 }
