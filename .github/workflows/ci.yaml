@@ -46,10 +46,18 @@ jobs:
       - run: cargo lambda build --release --arm64 --workspace --exclude common
 
       # deploy
+      - uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{secrets.AWS_ACCESS_KEY_ID}}
+          aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+          aws-region: ${{env.AWS_REGION}}
+
       - uses: actions/setup-node@v3
         with:
           node-version: 16
       - run: npm ci
         working-directory: infra
       - run: npx cdk bootstrap
+        working-directory: infra
+      - run: npx cdk deploy --require-approval never
         working-directory: infra
