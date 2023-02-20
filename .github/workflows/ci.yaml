@@ -3,7 +3,7 @@ name: Continuous Integration
 on: [push, pull_request]
 
 jobs:
-  test:
+  check:
     name: Check
     runs-on: ubuntu-latest
     steps:
@@ -13,7 +13,7 @@ jobs:
       - name: Install Rust Toolchain
         uses: dtolnay/rust-toolchain@stable
 
-      - name: Run cargo check 
+      - name: Run cargo check
         run: cargo check
 
   test:
