@@ -17,8 +17,8 @@ async fn main() -> Result<(), Error> {
 async fn function_handler(event: Request) -> Result<Response<Body>, Error> {
     let query_params = event.query_string_parameters();
 
-    let a = parse_number(&query_params, "a", 1);
-    let b = parse_number(&query_params, "b", 2);
+    let a = parse_number(&query_params, "a", 7);
+    let b = parse_number(&query_params, "b", 35);
     let c = common::add(a, b);
 
     let resp = Response::builder()
