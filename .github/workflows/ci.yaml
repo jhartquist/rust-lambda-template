@@ -29,10 +29,13 @@ jobs:
           components: rustfmt
       - run: cargo fmt --check
 
-  build:
+  deploy:
+    name: Deploy
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
+      # build
       - uses: dtolnay/rust-toolchain@stable
       - uses: korandoru/setup-zig@v1
         with:
@@ -40,22 +43,13 @@ jobs:
       - uses: jaxxstorm/action-install-gh-release@v1.9.0
         with:
           repo: cargo-lambda/cargo-lambda
-          # tag: v0.14.0 # Remove this if you want to grab always the latest version
-          # platform: linux # Other valid options: 'windows' or 'darwin'
-          # arch: x86_64 # Other valid options for linux: 'aarch64'
-      # Add your build steps below
-      - run: cargo lambda build --arm64
+      - run: cargo lambda build --release --arm64 --workspace --exclude common
 
-  # deploy:
-  #   name: Deploy CDK Stack
-  #   runs-on: ubuntu-latest
-  #   defaults:
-  #     run:
-  #       working-directory: infra
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #     - uses: actions/setup-node@v3
-  #       with:
-  #         node-version: 16
-  #     - run: npm ci
-  #     - run: npx cdk bootstrap
+      # deploy
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - run: npm ci
+        working-directory: infra
+      - run: npx cdk bootstrap
+        working-directory: infra
