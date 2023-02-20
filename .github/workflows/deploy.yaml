@@ -1,34 +1,12 @@
-name: Continuous Integration
+name: Deploy
 
-on: [push, pull_request]
+on:
+  workflow_run:
+    workflows: Run Tests
+    branches: main
+    types: completed
 
 jobs:
-  check:
-    name: Check
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: dtolnay/rust-toolchain@stable
-      - run: cargo check
-
-  test:
-    name: Test
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: dtolnay/rust-toolchain@stable
-      - run: cargo test
-
-  fmt:
-    name: Rustfmt
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: dtolnay/rust-toolchain@stable
-        with:
-          components: rustfmt
-      - run: cargo fmt --check
-
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
@@ -46,13 +24,14 @@ jobs:
           repo: cargo-lambda/cargo-lambda
       - run: cargo lambda build --release --arm64 --workspace --exclude common
 
-      # deploy
+      # authenticate
       - uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{secrets.AWS_ACCESS_KEY_ID}}
           aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
           aws-region: ${{vars.AWS_REGION}}
 
+      # deploy
       - uses: actions/setup-node@v3
         with:
           node-version: 16
