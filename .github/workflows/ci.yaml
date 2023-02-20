@@ -32,10 +32,13 @@ jobs:
   deploy:
     name: Deploy CDK Stack
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: infra
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
           node-version: 16
       - run: npm ci
-        working-directory: ./infra
+      - run: cdk --version
